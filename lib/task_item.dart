@@ -28,9 +28,8 @@ class TaskItem extends StatelessWidget {
             ),
           ),
           SlidableAction(
-            onPressed: (context)  {
-
-               Navigator.pushNamed(context, EditWidget.routeName,
+            onPressed: (context) {
+              Navigator.pushNamed(context, EditWidget.routeName,
                   arguments: model);
             },
             backgroundColor: Colors.blue,

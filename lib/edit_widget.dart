@@ -20,19 +20,21 @@ class _EditWidgetState extends State<EditWidget> {
   @override
   void initState() {
     super.initState();
-
-    selectedDate = DateTime.now();
     descriptionController = TextEditingController();
     titleController = TextEditingController();
   }
 
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
-    task = ModalRoute.of(context)!.settings.arguments as TaskModel;
-
-    selectedDate = DateTime.fromMillisecondsSinceEpoch(task.date);
-    descriptionController.text = task.description;
-    titleController.text = task.title;
+    if (counter == 0) {
+      task = ModalRoute.of(context)!.settings.arguments as TaskModel;
+      descriptionController.text = task.description;
+      titleController.text = task.title;
+      selectedDate = DateTime.fromMillisecondsSinceEpoch(task.date);
+      counter++;
+    }
 
     return Scaffold(
       backgroundColor: Color(0xffDFECDB),
@@ -203,7 +205,6 @@ class _EditWidgetState extends State<EditWidget> {
     if (chosenDate != null) {
       setState(() {
         selectedDate = chosenDate;
-
         task.date = selectedDate.millisecondsSinceEpoch;
       });
     }
