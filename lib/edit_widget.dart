@@ -28,10 +28,8 @@ class _EditWidgetState extends State<EditWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Extract arguments from ModalRoute
     task = ModalRoute.of(context)!.settings.arguments as TaskModel;
 
-    // Initialize controllers and selected date with existing task data
     selectedDate = DateTime.fromMillisecondsSinceEpoch(task.date);
     descriptionController.text = task.description;
     titleController.text = task.title;
@@ -42,15 +40,16 @@ class _EditWidgetState extends State<EditWidget> {
         backgroundColor: Colors.blue,
         toolbarHeight: 80,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: Text(
-          'To Do List',
+          'To Do ',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -85,15 +84,19 @@ class _EditWidgetState extends State<EditWidget> {
                     },
                     controller: titleController,
                     decoration: InputDecoration(
-                        labelText: "Title",
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                            borderRadius: BorderRadius.circular(12)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue),
-                            borderRadius: BorderRadius.circular(12))),
+                      labelText: "Title",
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -107,15 +110,19 @@ class _EditWidgetState extends State<EditWidget> {
                     },
                     controller: descriptionController,
                     decoration: InputDecoration(
-                        labelText: "Description",
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                            borderRadius: BorderRadius.circular(12)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue),
-                            borderRadius: BorderRadius.circular(12))),
+                      labelText: "Description",
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -148,31 +155,34 @@ class _EditWidgetState extends State<EditWidget> {
                   Container(
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            TaskModel updatedTask = TaskModel(
-                                id: task.id,
-                                title: titleController.text,
-                                date: selectedDate.millisecondsSinceEpoch,
-                                description: descriptionController.text);
-                            FirebaseFunctions.editTask(task.id, updatedTask)
-                                .then((value) {
-                              Navigator.pop(context, updatedTask);
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.blue,
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          TaskModel updatedTask = TaskModel(
+                            id: task.id,
+                            title: titleController.text,
+                            date: selectedDate.millisecondsSinceEpoch,
+                            description: descriptionController.text,
+                          );
+                          FirebaseFunctions.editTask(task.id, updatedTask)
+                              .then((value) {
+                            Navigator.pop(context, updatedTask);
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: Text(
+                        "Save Changes",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
                         ),
-                        child: Text(
-                          "Save Changes",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300),
-                        )),
-                  )
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -184,14 +194,17 @@ class _EditWidgetState extends State<EditWidget> {
 
   selectDate(BuildContext context) async {
     DateTime? chosenDate = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(Duration(days: 365)));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
 
     if (chosenDate != null) {
       setState(() {
         selectedDate = chosenDate;
+
+        task.date = selectedDate.millisecondsSinceEpoch;
       });
     }
   }
